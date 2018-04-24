@@ -1,0 +1,120 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project6
+{
+    public class Graph<TNode>
+    {
+        private Dictionary<TNode, List<KeyValuePair<TNode, double>>> _adjList;
+        private List<TNode> _nodes;
+
+        public Graph()
+        {
+            _adjList = new Dictionary<TNode, List<KeyValuePair<TNode, double>>>();
+            _nodes = new List<TNode>();
+        }
+
+        public List<TNode> Nodes
+        {
+            get
+            {
+                return _nodes;
+            }
+        }
+
+        /// <summary>
+        /// Adds a node to the graph
+        /// </summary>
+        /// <param name="node">The node to add</param>
+        public void AddNode(TNode node)
+        {
+            //YOU DO THIS
+            //If node has not already been added, add it to your list of nodes
+            if (!_nodes.Contains(node))
+            {
+                _nodes.Add(node);
+                //Create a new entry for it in the adjacency list with an empty list as its value
+                List<KeyValuePair<TNode, double>> list = new List<KeyValuePair<TNode, double>>();
+                _adjList.Add(node, list);
+            }
+
+        }
+
+        /// <summary>
+        /// Adds a (directed, weighted) edge to the graph
+        /// </summary>
+        /// <param name="start">The source node of the edge</param>
+        /// <param name="stop">The destination node of the edge</param>
+        /// <param name="value">The weight of the edge</param>
+        public void AddEdge(TNode start, TNode stop, double value)
+        {
+            //YOU DO THIS
+            //If either node has not already been added, call AddNode with them
+            if (!_nodes.Contains(start))
+            {
+                AddNode(start);
+            }
+            if (!_nodes.Contains(stop))
+            {
+                AddNode(stop);
+            }
+            //Add that edge to the adjacency list
+            KeyValuePair<TNode, double> key = new KeyValuePair<TNode, double>(stop, value);
+            _adjList[start].Add(key);
+        }
+
+        /// <summary>
+        /// Finds the biggest edge either to or from a node
+        /// </summary>
+        /// <param name="n">A node in the graph</param>
+        /// <param name="outgoing">True if we want an outgoing edge from n, and false
+        /// if we want an edge incoming to n (with n as the destination)</param>
+        /// <returns>A KeyValuePair representing the edge 
+        /// (key: the other node on the edge, value: the weight of the edge)</returns>
+        public KeyValuePair<TNode, double> MaxEdge(TNode n, bool outgoing)
+        {
+            //YOU DO THIS
+            //If outgoing is true, you should return the KeyValuePair (v,weight)
+            //where n->v is the biggest outgoing edge from n, and weight is its edge weight
+            KeyValuePair<TNode, double> key = new KeyValuePair<TNode, double>(default(TNode), double.MinValue);
+            if (outgoing)
+            {
+                foreach (KeyValuePair<TNode, double> pair in _adjList[n])
+                {
+                    if (pair.Value >= key.Value)
+                    {
+                        key = pair;
+                    }
+                }
+            }
+            else
+            {
+                //If outgoing is false, you should return the KeyValuePair (v,weight)
+                //where v->n is the biggest edge INCOMING to n, and weight is its edge weight
+                //(This is harder to do -- you will need to search all through your adjacency list 
+                //to find edges incoming to n. You will also need to create a new KeyValuePair, as one
+                //will not be already stored in the list.)
+                foreach (KeyValuePair<TNode, List<KeyValuePair<TNode, double>>> entry in _adjList)
+                {
+                    TNode node = entry.Key;
+                    List<KeyValuePair<TNode, double>> list = entry.Value;
+                    foreach (KeyValuePair<TNode, double> pair in list)
+                    {
+                        if (pair.Key.ToString() == n.ToString())
+                        {
+                            if (pair.Value >= key.Value)
+                            {
+                                key = new KeyValuePair<TNode, double>(node, pair.Value);
+                            }
+                        }
+                    }
+                }
+
+            }
+            return key;
+        }
+    }
+}
