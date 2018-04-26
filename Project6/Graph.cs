@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// 
+/// </summary>
 namespace Project6
 {
     public class Graph<TNode>
@@ -115,6 +118,48 @@ namespace Project6
 
             }
             return key;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <returns></returns>
+        public List<TNode> BFS(TNode start, TNode stop)
+        {
+            Queue<TNode> q = new Queue<TNode>();
+            Dictionary<TNode, TNode> prev = new Dictionary<TNode, TNode>();
+            List<TNode> visit = new List<TNode>(); //the nodes we've visited
+            q.Enqueue(start); //enqueue first node
+            visit.Add(start);
+
+            while (q.Count > 0)
+            {
+                TNode n = q.Dequeue();
+                List<KeyValuePair<TNode, double>> list = _adjList[n];
+
+                foreach (KeyValuePair<TNode, double> k in list)
+                {
+                    if (!visit.Contains(k.Key))
+                    {
+                        visit.Add(k.Key);
+                        q.Enqueue(k.Key);
+                        prev.Add(k.Key, n);
+                    }
+                }
+            }
+
+            List<TNode> path = new List<TNode>();
+            TNode node = stop;
+            path.Add(stop); //add initial stop node
+            while (!node.Equals(start))
+            {   
+                path.Add(prev[node]);
+                node = prev[node];
+            }
+
+            return path;
         }
     }
 }

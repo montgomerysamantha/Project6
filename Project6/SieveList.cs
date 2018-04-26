@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// The class for finding the prime numbers between the bounds
+/// specified by the user. Implements the Sieve of Eratosthenes.
+/// </summary>
 namespace Project6
 {
     class SieveList : IEnumerable<int>
@@ -28,6 +32,9 @@ namespace Project6
             }
         }
 
+        /// <summary>
+        /// Finds the primes for the specified bounds.
+        /// </summary>
         public void FindPrimes()
         {
             int bound = _tail.Data;
@@ -52,6 +59,10 @@ namespace Project6
             }
         }
 
+        /// <summary>
+        /// Builds a linked list of all of the prime numbers.
+        /// </summary>
+        /// <param name="bound">how large the list is</param>
         public void BuildList(int bound)
         {
             if (Count != 0)
@@ -75,6 +86,27 @@ namespace Project6
                 }
                 _tail = cur;
                 _size = bound - 1;
+            }
+        }
+
+        /// <summary>
+        /// Shortens the list by only allowing numbers greater than the lower parameter.
+        /// </summary>
+        /// <param name="lower">the lower bound for our primes</param>
+        public void TrimList(int lower)
+        {
+            //go through linked list
+            Node temp = _head;
+            while (_head != null)
+            {
+                if (_head.Data < lower)
+                {
+                    _head = _head.Next;
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -132,6 +164,9 @@ namespace Project6
             }
         }
 
+        /// <summary>
+        /// The Node inner structure of the linked SieveList we are building.
+        /// </summary>
         private class Node
         {
             private int _data;
