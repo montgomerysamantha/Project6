@@ -5,14 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 
 /// <summary>
+/// The Graph data structure, which holds Nodes (that have data)
+/// and the edges between the Nodes if they exist.
 /// 
+/// The connectedness of the graph is represented using
+/// a adjacency list, which is the Dictionary where the
+/// keys are the Nodes and the value is a list of (KVP) all of 
+/// the Nodes that that specific node is connected to. 
+/// 
+/// Note: the edges can also be weighted if needed. For this
+/// project, all of the edge weights are just 1 for simplicity.
 /// </summary>
 namespace Project6
 {
     public class Graph<TNode>
     {
-        private Dictionary<TNode, List<KeyValuePair<TNode, double>>> _adjList;
-        private List<TNode> _nodes;
+        /*adjacency list where the keys are the nodes of the graph and the value
+         * is a list of nodes that are adjacent to that node(the key)
+         */
+        private Dictionary<TNode, List<KeyValuePair<TNode, double>>> _adjList; 
+        private List<TNode> _nodes; //all of the nodes (vertices) in the graph
 
         public Graph()
         {
@@ -34,8 +46,7 @@ namespace Project6
         /// <param name="node">The node to add</param>
         public void AddNode(TNode node)
         {
-            //YOU DO THIS
-            //If node has not already been added, add it to your list of nodes
+            //If node has not already been added, add it to the list of nodes
             if (!_nodes.Contains(node))
             {
                 _nodes.Add(node);
@@ -47,20 +58,20 @@ namespace Project6
         }
 
         /// <summary>
-        /// Adds a (directed, weighted) edge to the graph
+        /// Adds a (directed, weighted) edge to the graph bewtween
+        /// two nodes passed in as parameters (start and stop)
         /// </summary>
         /// <param name="start">The source node of the edge</param>
         /// <param name="stop">The destination node of the edge</param>
         /// <param name="value">The weight of the edge</param>
         public void AddEdge(TNode start, TNode stop, double value)
         {
-            //YOU DO THIS
             //If either node has not already been added, call AddNode with them
-            if (!_nodes.Contains(start))
+            if (!_nodes.Contains(start)) //check for the start node
             {
                 AddNode(start);
             }
-            if (!_nodes.Contains(stop))
+            if (!_nodes.Contains(stop)) //check for the stop node
             {
                 AddNode(stop);
             }
@@ -79,8 +90,7 @@ namespace Project6
         /// (key: the other node on the edge, value: the weight of the edge)</returns>
         public KeyValuePair<TNode, double> MaxEdge(TNode n, bool outgoing)
         {
-            //YOU DO THIS
-            //If outgoing is true, you should return the KeyValuePair (v,weight)
+            //If outgoing is true, return the KeyValuePair (v,weight)
             //where n->v is the biggest outgoing edge from n, and weight is its edge weight
             KeyValuePair<TNode, double> key = new KeyValuePair<TNode, double>(default(TNode), double.MinValue);
             if (outgoing)
@@ -95,7 +105,7 @@ namespace Project6
             }
             else
             {
-                //If outgoing is false, you should return the KeyValuePair (v,weight)
+                //If outgoing is false, return the KeyValuePair (v,weight)
                 //where v->n is the biggest edge INCOMING to n, and weight is its edge weight
                 //(This is harder to do -- you will need to search all through your adjacency list 
                 //to find edges incoming to n. You will also need to create a new KeyValuePair, as one
@@ -121,10 +131,11 @@ namespace Project6
         }
 
         /// <summary>
-        /// 
+        /// A path (represented as a list) is made using Breadth First Search
+        /// connecting the two nodes supplied by the parameters (start and stop).
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="stop"></param>
+        /// <param name="start">the starting node</param>
+        /// <param name="stop">the ending node</param>
         /// <returns></returns>
         public List<TNode> BFS(TNode start, TNode stop)
         {
@@ -132,7 +143,7 @@ namespace Project6
             Dictionary<TNode, TNode> prev = new Dictionary<TNode, TNode>();
             List<TNode> visit = new List<TNode>(); //the nodes we've visited
             q.Enqueue(start); //enqueue first node
-            visit.Add(start);
+            visit.Add(start); //visit first node
 
             while (q.Count > 0)
             {
@@ -158,6 +169,8 @@ namespace Project6
                 path.Add(prev[node]);
                 node = prev[node];
             }
+
+            path.Reverse();
 
             return path;
         }

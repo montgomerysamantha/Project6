@@ -33,7 +33,8 @@ namespace Project6
         }
 
         /// <summary>
-        /// Finds the primes for the specified bounds.
+        /// Finds the primes for the specified bounds using
+        /// the sieve of Eratosthenes. 
         /// </summary>
         public void FindPrimes()
         {
@@ -97,19 +98,21 @@ namespace Project6
         {
             //go through linked list
             Node temp = _head;
-            while (_head != null)
+            while (_head != null) //while the head isn't hull
             {
-                if (_head.Data < lower)
+                if (_head.Data < lower) //if head is less than the lower bound, the update the head (we don't need this prime)
                 {
                     _head = _head.Next;
                 }
-                else
+                else //do nothing, keep the prime and return from the method
                 {
                     return;
                 }
             }
         }
 
+
+        //implementing IEnumerable for the sieve, most of this is auto-generated
         public IEnumerator<int> GetEnumerator()
         {
             return new SieveEnumerator(_head);
@@ -178,6 +181,7 @@ namespace Project6
                 _next = null;
             }
 
+            //the data (in our case prime) the node holds
             public int Data
             {
                 get
@@ -186,6 +190,7 @@ namespace Project6
                 }
             }
 
+            //what node comes next in the list
             public Node Next
             {
                 get
